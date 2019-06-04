@@ -1,6 +1,14 @@
 import React from "react";
-// import logo from "./logo.svg";
-import "./App.css";
+
+import {
+  Button,
+  Typography,
+  Input,
+  List,
+  ListItem,
+  ListItemText,
+  Grid
+} from "@material-ui/core";
 
 class App extends React.Component {
   constructor(props) {
@@ -10,7 +18,6 @@ class App extends React.Component {
       values: []
     };
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.cancelCourse = this.cancelCourse.bind(this);
   }
 
   handleSubmit(event) {
@@ -34,40 +41,88 @@ class App extends React.Component {
         values: toAdd
       });
     }
+    this.element.value = "";
   }
 
-  cancelCourse = () => {
-    this.setState({
-      current_value: ""
-    });
-  };
-
   render() {
-    let taskList = this.state.values.map(task => {
-      return <li key={task[1]}>{task[0]}</li>;
-    });
+    console.log(this.state.values.length);
+    let taskList;
+    if (this.state.values !== []) {
+      taskList = this.state.values.map(task => {
+        return (
+          <div>
+            <ListItem button style={{ textAlign: `center` }}>
+              <ListItemText primary={task[0]} key={task[1]} />
+            </ListItem>
+          </div>
+        );
+      });
+    }
+    if (this.state.values.length === 0) {
+      console.log("this is working");
+      taskList = <p>Looks like you do not have any tasks to complete. </p>;
+    }
 
     return (
       <div className="App">
-        <div className="task-form">
-          <h2>To Do List Manager </h2>
-          <form id="create-task-form" onSubmit={this.handleSubmit}>
-            <label>Task:</label> <br />
-            <input type="text" ref={el => (this.element = el)} />
-            <input
-              type="submit"
-              value="Submit"
-              className="submit"
-              name="cancelCourse"
-              onClick={this.cancelCourse}
-            />
-          </form>
-        </div>
-        <div className="display-tasks">
-          <section>
-            <ul>{taskList}</ul>
-          </section>
-        </div>
+        <Grid container spacing={3}>
+          <Grid
+            item
+            xs={6}
+            className="task-form"
+            style={{ textAlign: `center` }}
+          >
+            <Typography
+              variant="h4"
+              component="h1"
+              color="inherit"
+              style={{ margin: `10px` }}
+            >
+              Task Manager
+            </Typography>
+            <form id="create-task-form" onSubmit={this.handleSubmit}>
+              <Input
+                margin="normal"
+                variant="filled"
+                inputRef={el => (this.element = el)}
+                style={{ margin: `15px` }}
+              />
+              <Button
+                variant="outlined"
+                size="small"
+                color="primary"
+                type="submit"
+                name="cancelCourse"
+              >
+                Add Task
+              </Button>
+            </form>
+          </Grid>
+          <Grid
+            item
+            xs={6}
+            className="display-tasks"
+            style={{ textAlign: `center` }}
+          >
+            <section>
+              <Typography
+                variant="h6"
+                component="h1"
+                color="inherit"
+                style={{ margin: `10px` }}
+              >
+                Tasks to Complete
+              </Typography>
+              <List
+                component="nav"
+                aria-label="Main mailbox folders"
+                style={{ textAlign: `center` }}
+              >
+                {taskList}
+              </List>
+            </section>
+          </Grid>
+        </Grid>
       </div>
     );
   }
